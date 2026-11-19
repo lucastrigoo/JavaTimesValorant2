@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VCT HUB // Gerenciador de Times Valorant</title>
+  
+  <!-- Fontes do Google: Rajdhani para estética tática/esports e Inter para textos de suporte -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Folha de Estilos Principal -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==================================================================== -->
+  <!-- CABEÇALHO PRINCIPAL COM IDENTIDADE VISUAL VALORANT / VCT             -->
+  <!-- ==================================================================== -->
+  <header class="vct-header">
+    <div class="header-container">
+      <div class="brand">
+        <!-- Ícone / Logo estilizado do VCT em SVG -->
+        <div class="vct-logo-badge">
+          <svg class="vct-icon" viewBox="0 0 100 100" fill="currentColor">
+            <polygon points="50,10 90,85 70,85 50,45 30,85 10,85" />
+            <polygon points="50,60 62,85 38,85" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-tag">VALORANT CHAMPIONS TOUR // ESPECIFICAÇÃO TÁTICA</div>
+          <h1 class="brand-title">CADASTRO DE TIMES // VCT HUB</h1>
+        </div>
+      </div>
+
+      <div class="header-meta">
+        <!-- Indicador de Status da Conexão com o Backend -->
+        <div class="status-indicator" id="apiStatusBadge">
+          <span class="status-dot"></span>
+          <span class="status-text" id="apiStatusText">CONECTADO // BACKEND :8080</span>
+        </div>
+        <!-- Botão para alternar Guia Educacional da API -->
+        <button type="button" class="btn-guide-toggle" id="btnToggleGuide" title="Ver especificações da API e endpoints">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          GUIA EDUCATIVO (API DOCS)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================================================================== -->
+  <!-- PAINEL EDUCATIVO / DOCUMENTAÇÃO DOS ENDPOINTS (REQUISITO DA AVALIAÇÃO) -->
+  <!-- ==================================================================== -->
+  <section class="edu-guide" id="eduGuideSection">
+    <div class="guide-container">
+      <div class="guide-header">
+        <div class="guide-title">
+          <span class="badge-vct">ARQUITETURA FULL-STACK</span>
+          <h3>Mapeamento dos Endpoints Java Spring Boot & Fluxo HTTP</h3>
+        </div>
+        <button type="button" class="btn-close-guide" id="btnCloseGuide">&times;</button>
+      </div>
+      <p class="guide-desc">
+        Este painel detalha os 4 métodos HTTP implementados no <code>TimeController.java</code> e integrados via <code>fetch()</code> no <code>app.js</code>, pronto para consulta durante a apresentação:
+      </p>
+
+      <div class="guide-grid">
+        <div class="guide-card get-card">
+          <div class="guide-card-header">
+            <span class="http-tag tag-get">GET</span>
+            <code>/time?nome={nome}</code>
+          </div>
+          <p class="guide-card-body">
+            <strong>Objetivo:</strong> Consulta um time específico pelo nome.<br>
+            <strong>Parâmetro:</strong> <code>@RequestParam String nome</code><br>
+            <strong>Retorno:</strong> <code>200 OK</code> com JSON do objeto <code>Time</code>.
+          </p>
+        </div>
+
+        <div class="guide-card post-card">
+          <div class="guide-card-header">
+            <span class="http-tag tag-post">POST</span>
+            <code>/time</code>
+          </div>
+          <p class="guide-card-body">
+            <strong>Objetivo:</strong> Registra um novo time no banco de dados.<br>
+            <strong>Header:</strong> <code>Content-Type: application/json</code><br>
+            <strong>Body:</strong> JSON serializado com <code>{ nome, tier, starPlayer, internacionais }</code>.<br>
+            <strong>Retorno:</strong> <code>200 OK</code> (Void).
+          </p>
+        </div>
+
+        <div class="guide-card put-card">
+          <div class="guide-card-header">
+            <span class="http-tag tag-put">PUT</span>
+            <code>/time?id={id}</code>
+          </div>
+          <p class="guide-card-body">
+            <strong>Objetivo:</strong> Atualiza os dados de um time existente pelo ID.<br>
+            <strong>Parâmetros:</strong> <code>@RequestParam Integer id</code> e <code>@RequestBody Time time</code>.<br>
+            <strong>Retorno:</strong> <code>200 OK</code> (Void).
+          </p>
+        </div>
+
+        <div class="guide-card delete-card">
+          <div class="guide-card-header">
+            <span class="http-tag tag-delete">DELETE</span>
+            <code>/time?nome={nome}</code>
+          </div>
+          <p class="guide-card-body">
+            <strong>Objetivo:</strong> Remove o registro do time pelo nome.<br>
+            <strong>Parâmetro:</strong> <code>@RequestParam String nome</code>.<br>
+            <strong>Retorno:</strong> <code>200 OK</code> (Void).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- CONTEÚDO PRINCIPAL (LAYOUT EM DUAS COLUNAS TÁTICAS)                  -->
+  <!-- ==================================================================== -->
+  <main class="main-layout">
+    
+    <!-- COLUNA ESQUERDA: FORMULÁRIO DE CADASTRO E EDIÇÃO (CREATE / UPDATE) -->
+    <aside class="sidebar-column">
+      <div class="vct-panel form-panel">
+        <div class="panel-header">
+          <div class="panel-icon">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </div>
+          <div>
+            <span class="panel-subtitle" id="formModeSubtitle">MODO DE OPERAÇÃO: CRIAÇÃO</span>
+            <h2 class="panel-title" id="formTitle">CADASTRAR TIME</h2>
+          </div>
+        </div>
+
+        <!-- Banner exibido dinamicamente apenas quando em modo de edição -->
+        <div class="edit-mode-indicator" id="editModeIndicator" style="display: none;">
+          <div class="edit-mode-content">
+            <span class="pulsing-badge">EDITANDO TIME ATIVO</span>
+            <span class="edit-team-name" id="editTeamNameDisplay">Nome do Time</span>
+            <small class="edit-id-text" id="editTeamIdDisplay">ID: #0</small>
+          </div>
+          <button type="button" class="btn-cancel-edit" id="btnCancelEdit" title="Cancelar edição e voltar ao modo cadastro">
+            &times; Cancelar
+          </button>
+        </div>
+
+        <!-- FORMULÁRIO INTEGRADO COM O BACKEND -->
+        <form id="teamForm" class="vct-form" novalidate>
+          <!-- Campo oculto para armazenar o ID ao atualizar (PUT /time?id=...) -->
+          <input type="hidden" id="timeId">
+
+          <!-- Campo 1: Nome do Time -->
+          <div class="form-group">
+            <label for="timeNome" class="form-label">
+              <span>NOME DA ORGANIZAÇÃO / TIME</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="timeNome" 
+                name="nome" 
+                class="vct-input" 
+                placeholder="Ex: LOUD, Sentinels, Fnatic" 
+                required 
+                autocomplete="off"
+              >
+              <span class="input-focus-border"></span>
+            </div>
+            <small class="form-help">Chave de identificação única no banco de dados.</small>
+          </div>
+
+          <!-- Campo 2: Tier Competitivo -->
+          <div class="form-group">
+            <label for="timeTier" class="form-label">
+              <span>TIER COMPETITIVO VCT</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="timeTier" name="tier" class="vct-select" required>
+                <option value="" disabled selected>Selecione a categoria de Tier...</option>
+                <option value="1">Tier 1 - Liga Internacional (Americas, EMEA, Pacific, CN)</option>
+                <option value="2">Tier 2 - VCT Challengers & Ascension</option>
+                <option value="3">Tier 3 - Circuitos Premier & Semiprofissional</option>
+              </select>
+              <span class="select-arrow">▼</span>
+            </div>
+            <small class="form-help">Nível de classificação da equipe no ecossistema Riot Games.</small>
+          </div>
+
+          <!-- Campo 3: Jogador Destaque (Star Player) -->
+          <div class="form-group">
+            <label for="timeStarPlayer" class="form-label">
+              <span>STAR PLAYER (JOGADOR DESTAQUE)</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="timeStarPlayer" 
+                name="starPlayer" 
+                class="vct-input" 
+                placeholder="Ex: aspas, TenZ, Derke, Chronicle" 
+                required 
+                autocomplete="off"
+              >
+              <span class="input-focus-border"></span>
+            </div>
+            <small class="form-help">Atleta principal / MVP da equipe.</small>
+          </div>
+
+          <!-- Campo 4: Disputa Torneios Internacionais (Boolean) -->
+          <div class="form-group">
+            <label for="timeInternacionais" class="form-label">
+              <span>EXPERIÊNCIA INTERNACIONAL (MASTERS / CHAMPIONS)</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="timeInternacionais" name="internacionais" class="vct-select" required>
+                <option value="" disabled selected>Possui presença internacional?</option>
+                <option value="true">SIM - Já disputou ou disputa Masters / Champions</option>
+                <option value="false">NÃO - Apenas competições regionais / domésticas</option>
+              </select>
+              <span class="select-arrow">▼</span>
+            </div>
+            <small class="form-help">Mapeia o campo booleano <code>internacionais</code> no backend.</small>
+          </div>
+
+          <!-- Botões de Ação do Formulário -->
+          <div class="form-actions">
+            <button type="submit" class="btn-vct btn-submit" id="btnSubmitForm">
+              <span class="btn-text" id="btnSubmitText">CADASTRAR TIME (POST)</span>
+              <span class="btn-cut"></span>
+            </button>
+            <button type="button" class="btn-vct-secondary" id="btnClearForm">
+              LIMPAR CAMPOS
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Card Tático: Times de Demonstração Rápida -->
+      <div class="vct-panel demo-panel">
+        <h4 class="demo-title">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          CARREGAMENTO RÁPIDO PARA AVALIAÇÃO
+        </h4>
+        <p class="demo-desc">Clique para preencher o formulário com dados pré-definidos de times consagrados do VCT:</p>
+        <div class="demo-buttons">
+          <button type="button" class="btn-demo-pill" data-demo="loud">LOUD</button>
+          <button type="button" class="btn-demo-pill" data-demo="sentinels">Sentinels</button>
+          <button type="button" class="btn-demo-pill" data-demo="fnatic">Fnatic</button>
+          <button type="button" class="btn-demo-pill" data-demo="prx">Paper Rex</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- COLUNA DIREITA: CONSULTAS, MÉTRICAS E LISTAGEM DE TIMES (READ / DELETE) -->
+    <section class="content-column">
+      
+      <!-- BARRA DE CONTROLE: BUSCA POR NOME, AÇÕES E ALTERNÂNCIA DE MODO -->
+      <div class="vct-panel controls-panel">
+        <div class="controls-top">
+          <!-- Campo de Busca Direta (GET /time?nome={nome}) -->
+          <div class="search-box">
+            <div class="search-input-wrapper">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input 
+                type="text" 
+                id="inputSearchNome" 
+                class="search-input" 
+                placeholder="Buscar time pelo nome (ex: LOUD)..."
+                autocomplete="off"
+              >
+            </div>
+            <button type="button" class="btn-vct-search" id="btnSearchTime" title="Executar GET /time?nome={nome}">
+              BUSCAR (GET)
+            </button>
+          </div>
+
+          <!-- Botões de Controle e Alternância de Visualização -->
+          <div class="view-toggles">
+            <button type="button" class="btn-vct-action" id="btnSyncAll" title="Re-sincronizar times cadastrados com o backend">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+              SINCRONIZAR
+            </button>
+
+            <!-- Alternador entre Visualização Cards vs Tabela -->
+            <div class="view-switch-group">
+              <button type="button" class="btn-switch active" id="btnViewCards" title="Exibir em Cards Valorant">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                CARDS
+              </button>
+              <button type="button" class="btn-switch" id="btnViewTable" title="Exibir em Tabela Tática">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                TABELA
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Métricas / Contadores Táticos -->
+        <div class="metrics-bar">
+          <div class="metric-item">
+            <span class="metric-label">TIMES EM EXIBIÇÃO</span>
+            <span class="metric-value" id="metricTotal">0</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-label">FRANQUIAS TIER 1</span>
+            <span class="metric-value text-red" id="metricTier1">0</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-label">VAGA INTERNACIONAL</span>
+            <span class="metric-value text-gold" id="metricInternacionais">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESTADO DE CARREGAMENTO (SPINNER TÁTICO VALORANT) -->
+      <div class="loading-state" id="loadingState" style="display: none;">
+        <div class="valorant-spinner">
+          <div class="spinner-core"></div>
+          <div class="spinner-ring"></div>
+        </div>
+        <p class="loading-text">INTERROGANDO BANCO DE DADOS // AGUARDE...</p>
+      </div>
+
+      <!-- ESTADO DE LISTA VAZIA (EMPTY STATE) -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon-wrapper">
+          <svg class="empty-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3">
+            <polygon points="50,15 85,80 15,80" stroke-dasharray="6,4" />
+            <circle cx="50" cy="55" r="10" stroke-dasharray="2,2" />
+            <line x1="50" y1="35" x2="50" y2="40" />
+            <circle cx="50" cy="70" r="2" fill="currentColor" />
+          </svg>
+        </div>
+        <h3 class="empty-title">NENHUM REGISTRO DE TIME ENCONTRADO</h3>
+        <p class="empty-desc">
+          O radar tático não detectou equipes ativas para os parâmetros informados. Utilize o formulário ao lado para cadastrar uma nova equipe ou pesquise pelo nome no banco de dados.
+        </p>
+      </div>
+
+      <!-- CONTAINER DE VISUALIZAÇÃO EM CARDS ESTILIZADOS VALORANT -->
+      <div class="cards-grid" id="cardsGrid">
+        <!-- Inserido dinamicamente pelo JavaScript (app.js) -->
+      </div>
+
+      <!-- CONTAINER DE VISUALIZAÇÃO EM TABELA TÁTICA -->
+      <div class="table-container" id="tableContainer" style="display: none;">
+        <table class="vct-table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">ORGANIZAÇÃO / TIME</th>
+              <th scope="col">TIER</th>
+              <th scope="col">STAR PLAYER</th>
+              <th scope="col">INTERNACIONAL</th>
+              <th scope="col" class="th-actions">AÇÕES TÁTICAS</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Inserido dinamicamente pelo JavaScript (app.js) -->
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO (DELETE COM ESTILO VALORANT)        -->
+  <!-- ==================================================================== -->
+  <div class="vct-modal-backdrop" id="deleteModalBackdrop" style="display: none;">
+    <div class="vct-modal">
+      <div class="modal-header">
+        <div class="modal-badge-danger">PROTOCOLO DE ELIMINAÇÃO</div>
+        <button type="button" class="btn-modal-close" id="btnCancelDeleteModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-warning-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <h3 class="modal-title">EXCLUIR TIME DO BANCO DE DADOS?</h3>
+        <p class="modal-text">
+          Você está prestes a executar uma requisição <code>DELETE /time?nome=<span id="modalTeamNameTarget"></span></code> no backend Java.
+          Esta operação removerá permanentemente o time do PostgreSQL.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-secondary" id="btnModalCancelAction">
+          CANCELAR
+        </button>
+        <button type="button" class="btn-modal-danger" id="btnModalConfirmDelete">
+          CONFIRMAR EXCLUSÃO (DELETE)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- CONTAINER DE NOTIFICAÇÕES / TOASTS (KILLFEED STYLE)                  -->
+  <!-- ==================================================================== -->
+  <div class="toast-container" id="toastContainer">
+    <!-- Toasts gerados dinamicamente pelo JavaScript -->
+  </div>
+
+  <!-- Script Principal com Fetch API e Manipulação do DOM -->
+  <script src="app.js"></script>
+</body>
+</html>
